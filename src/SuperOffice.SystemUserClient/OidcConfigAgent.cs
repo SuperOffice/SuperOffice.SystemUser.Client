@@ -21,13 +21,13 @@ namespace SuperOffice.SystemUser
         {
             _cache = new MemoryCache(new MemoryCacheOptions());
         }
-
-        public OidcConfigAgent(string uri)
+        public OidcConfigAgent(string uri, HttpClient client)
         {
             var retriever = new OpenIdConnectConfigurationRetriever();
             _configManager = new ConfigurationManager<OpenIdConnectConfiguration>(
                 uri,
-                retriever);
+                retriever,
+                client);
         }
 
         internal async Task<OpenIdConnectConfiguration> GetConfigurationAsync(string metadataAddress)

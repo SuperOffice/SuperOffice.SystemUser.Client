@@ -76,7 +76,7 @@ namespace SuperOffice.SystemUser
   
             // Have to look into avoiding WebApiOptions parameter here
             _configAgent =
-                new OidcConfigAgent(MetadataAddress);
+                new OidcConfigAgent(MetadataAddress, client);
         }
 
         /// <summary>
