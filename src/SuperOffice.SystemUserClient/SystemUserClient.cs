@@ -121,7 +121,7 @@ namespace SuperOffice.SystemUser
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Unable to successfully send request to PartnerSystemUserService endpoint. Verify all system user information is correct.");
+                    throw new HttpRequestException($"Request to PartnerSystemUserService endpoint failed with status code {response.StatusCode}. Reason: {response.ReasonPhrase}. Verify all system user information is correct.");
                 }
 
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

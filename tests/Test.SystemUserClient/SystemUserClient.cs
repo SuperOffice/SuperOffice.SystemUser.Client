@@ -5,6 +5,7 @@ using SuperOffice.SystemUser;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Test.SystemUserClient
@@ -84,6 +85,14 @@ namespace Test.SystemUserClient
             Assert.IsTrue(tokenValidationResult.IsValid);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(HttpRequestException))]
+        public async Task When_Missing_SystemUserInfo_Throw_HttpRequestException()
+        {
+            var client = new SuperOffice.SystemUser.SystemUserClient(GetWrongSystemUserInfo(), new System.Net.Http.HttpClient());
+            var tokenResult = await client.GetSystemUserJwtAsync();
+        }
+
 
         [TestMethod]
         [ExpectedException(typeof(SuperOffice.SystemUser.Client.Exceptions.InvalidSubDomainException))]
@@ -118,6 +127,18 @@ namespace Test.SystemUserClient
             sysUser.ContextIdentifier = _configuration["ContextIdentifier"];
             sysUser.SubDomain = _configuration["SubDomain"];
             sysUser.SystemUserToken = _configuration["SystemUserToken"];
+            sysUser.PrivateKey = PrivateCertificate;
+
+            return sysUser;
+        }
+
+        private SuperOffice.SystemUser.SystemUserInfo GetWrongSystemUserInfo()
+        {
+            var sysUser = new SuperOffice.SystemUser.SystemUserInfo();
+            sysUser.ClientSecret = _configuration["ClientSecret"];
+            sysUser.ContextIdentifier = _configuration["ContextIdentifier"];
+            sysUser.SubDomain = _configuration["SubDomain"];
+            sysUser.SystemUserToken = "abc";
             sysUser.PrivateKey = PrivateCertificate;
 
             return sysUser;
